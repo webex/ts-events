@@ -1,7 +1,6 @@
 /* eslint-disable jsdoc/require-jsdoc */
 import { TypedEvent } from './typed-event';
 
-// eslint-disable-next-line jest/prefer-lowercase-title
 describe('TypedEvent', () => {
   const event = new TypedEvent<(value: number) => void>();
   describe('on', () => {

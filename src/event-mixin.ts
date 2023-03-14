@@ -24,6 +24,7 @@ type eventHandlerType<Type> = Type extends TypedEvent<infer X> ? X : never;
  * @param Base - The class which will be extended with event subscription methods.
  * @returns A subclass of Base with event subscription methods added.
  */
+// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
 export function AddEvents<TBase extends Constructor, U>(Base: TBase) {
   // eslint-disable-next-line jsdoc/require-jsdoc
   return class WithEvents extends Base {
@@ -64,3 +65,12 @@ export function AddEvents<TBase extends Constructor, U>(Base: TBase) {
     }
   };
 }
+
+/**
+ * A helper type to ensure the export is seen as a type and not just a value.
+ */
+export type WithEventsDummyType<U> = {
+  on<K extends keyof U, E extends eventHandlerType<U[K]>>(eventName: K, handler: E): void;
+  once<K extends keyof U, E extends eventHandlerType<U[K]>>(eventName: K, handler: E): void;
+  off<K extends keyof U, E extends eventHandlerType<U[K]>>(eventName: K, handler: E): void;
+};

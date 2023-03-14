@@ -8,9 +8,6 @@ interface ParentEvents {
   eventTwo: TypedEvent<(value: boolean) => void>;
 }
 
-/**
- *
- */
 class _Parent {
   protected eventOne = new TypedEvent<(value: number) => void>();
 
