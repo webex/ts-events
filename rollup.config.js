@@ -1,8 +1,20 @@
 import commonjs from '@rollup/plugin-commonjs';
-import resolve from '@rollup/plugin-node-resolve';
-import dts from 'rollup-plugin-dts';
-import execute from 'rollup-plugin-execute';
+import { nodeResolve } from '@rollup/plugin-node-resolve';
+import nodePolyfills from 'rollup-plugin-polyfill-node';
+import { terser } from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
+import pkg from './package.json';
+
+// `yarn build` -> `production` is true
+// `yarn dev` -> `production` is false
+const production = !process.env.ROLLUP_WATCH;
+
+const plugins = [
+  typescript({ useTsconfigDeclarationDir: true }),
+  nodePolyfills({ include: ['events'] }),
+  nodeResolve({ browser: true, extensions: ['.js', '.ts'] }),
+  commonjs(),
+];
 
 export default [
   {
@@ -10,29 +22,39 @@ export default [
     output: [
       {
         format: 'esm',
-        dir: 'dist/esm',
-      },
-      {
-        format: 'cjs',
-        dir: 'dist/cjs',
+        file: pkg.module,
       },
     ],
-    plugins: [
-      typescript({ useTsconfigDeclarationDir: true }),
-      resolve({ browser: true, extensions: ['.js', '.ts'] }),
-      commonjs(),
-    ],
+    plugins,
     watch: {
       include: 'src/**',
     },
   },
+  // NOTE: Currently only building ES module when running `yarn dev` to speed up re-builds.
   {
     input: 'src/index.ts',
-    output: {
-      format: 'es',
-      file: 'dist/types.d.ts',
-    },
-    plugins: [dts(), execute(['rm -f dist/types/*', 'mv dist/types.d.ts dist/types/index.d.ts'])],
-    watch: true,
+    output: [
+      {
+        format: 'cjs',
+        file: pkg.main,
+      },
+      {
+        format: 'umd',
+        file: pkg.browser,
+        indent: '\t',
+        name: 'Build',
+        sourcemap: !production,
+      },
+      {
+        format: 'umd',
+        file: pkg.browser.replace('.js', '.min.js'),
+        indent: '\t',
+        name: 'Build',
+        sourcemap: !production,
+        plugins: [terser()],
+      },
+    ],
+    plugins,
+    watch: false,
   },
 ];
