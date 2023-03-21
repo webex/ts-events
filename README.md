@@ -1,4 +1,4 @@
-# typescript-events
+# ts-events
 
 A library for subscribing to and emitting type-safe events using a familiar, javascript-style API:
 
