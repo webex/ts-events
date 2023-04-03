@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/webex/ts-events/compare/v1.0.0...v1.0.1) (2023-04-03)
+
+
+### Bug Fixes
+
+* fix package scope ([7600080](https://github.com/webex/ts-events/commit/76000808b2a85554910ff5b9c90fdc2b37ecab87))
+
 # 1.0.0 (2023-03-31)
 
 
