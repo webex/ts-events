@@ -2,7 +2,7 @@
 import { TypedEvent } from './typed-event';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/ban-types
-type Constructor = new (...args: any[]) => {};
+type Constructor = (new (...args: any[]) => {}) | (abstract new (...args: any[]) => {});
 
 // Extract the 'Handler' type from the given TypedEvent
 type eventHandlerType<Type> = Type extends TypedEvent<infer X> ? X : never;
