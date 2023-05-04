@@ -1,3 +1,15 @@
+# [1.1.0](https://github.com/webex/ts-events/compare/v1.0.1...v1.1.0) (2023-05-04)
+
+
+### Bug Fixes
+
+* semantic release workflow token ([17d2ed0](https://github.com/webex/ts-events/commit/17d2ed00aa2069b812c6e5cf9ba9cf2da1f1946b))
+
+
+### Features
+
+* support events on abstract classes ([d968cb3](https://github.com/webex/ts-events/commit/d968cb3fa11e9e7a6178c45de286826c42496244))
+
 ## [1.0.1](https://github.com/webex/ts-events/compare/v1.0.0...v1.0.1) (2023-04-03)
 
 
