@@ -76,3 +76,67 @@ describe('a child class', () => {
     expect(eventThreeArgs).toHaveLength(1);
   });
 });
+
+// New test cases for the path functionality
+describe('DeepNestedEvents with path', () => {
+  class DeepNestedEvents {
+    eventContainer = {
+      deeper: {
+        eventOne: new TypedEvent<(value: number) => void>(),
+        eventTwo: new TypedEvent<(value: boolean) => void>(),
+      },
+    };
+
+    fireEventOne() {
+      this.eventContainer.deeper.eventOne.emit(42);
+    }
+
+    fireEventTwo() {
+      this.eventContainer.deeper.eventTwo.emit(true);
+    }
+  }
+
+  const NestedEventsClass = AddEvents<
+    typeof DeepNestedEvents,
+    {
+      eventOne: TypedEvent<(value: number) => void>;
+      eventTwo: TypedEvent<(value: boolean) => void>;
+    }
+  >(DeepNestedEvents, 'eventContainer.deeper');
+
+  const myClass = new NestedEventsClass();
+  it('should notify handlers when nested events are fired', () => {
+    expect.hasAssertions();
+    const handlerOneArgs: number[] = [];
+    const handlerTwoArgs: boolean[] = [];
+
+    myClass.on('eventOne', (value: number) => handlerOneArgs.push(value));
+    myClass.on('eventTwo', (value: boolean) => handlerTwoArgs.push(value));
+
+    myClass.fireEventOne();
+    myClass.fireEventTwo();
+
+    expect(handlerOneArgs).toStrictEqual([42]);
+
+    expect(handlerTwoArgs).toStrictEqual([true]);
+  });
+
+  it('should throw an error when trying to subscribe to an event with an invalid path', () => {
+    expect.hasAssertions();
+
+    const InvalidPathClass = AddEvents<
+      typeof DeepNestedEvents,
+      {
+        eventOne: TypedEvent<(value: number) => void>;
+      }
+    >(DeepNestedEvents, 'eventContainer.unknown');
+
+    const instance = new InvalidPathClass();
+
+    // Trying to bind an event handler to an invalid path
+    expect(() => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      instance.on('eventOne', () => {});
+    }).toThrow(new Error('Event "eventContainer.unknown.eventOne" is not defined'));
+  });
+});
