@@ -77,34 +77,36 @@ describe('a child class', () => {
   });
 });
 
-// New test cases for the path functionality
-describe('DeepNestedEvents with path', () => {
-  class DeepNestedEvents {
-    eventContainer = {
-      deeper: {
-        eventOne: new TypedEvent<(value: number) => void>(),
-        eventTwo: new TypedEvent<(value: boolean) => void>(),
-      },
-    };
+interface NestedEvents {
+  eventOne: TypedEvent<(value: number) => void>;
+  eventTwo: TypedEvent<(value: boolean) => void>;
+}
 
-    fireEventOne() {
-      this.eventContainer.deeper.eventOne.emit(42);
-    }
+interface InvalidPathEvents {
+  eventOne: TypedEvent<(value: number) => void>;
+}
+class _Nested {
+  eventContainer = {
+    deeper: {
+      eventOne: new TypedEvent<(value: number) => void>(),
+      eventTwo: new TypedEvent<(value: boolean) => void>(),
+    },
+  };
 
-    fireEventTwo() {
-      this.eventContainer.deeper.eventTwo.emit(true);
-    }
+  fireEventOne() {
+    this.eventContainer.deeper.eventOne.emit(42);
   }
 
-  const NestedEventsClass = AddEvents<
-    typeof DeepNestedEvents,
-    {
-      eventOne: TypedEvent<(value: number) => void>;
-      eventTwo: TypedEvent<(value: boolean) => void>;
-    }
-  >(DeepNestedEvents, 'eventContainer.deeper');
+  fireEventTwo() {
+    this.eventContainer.deeper.eventTwo.emit(true);
+  }
+}
 
-  const myClass = new NestedEventsClass();
+const Nested = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'eventContainer.deeper');
+const InvalidPath = AddEvents<typeof _Nested, InvalidPathEvents>(_Nested, 'eventContainer.unknown');
+
+describe('a nested class with path', () => {
+  const myClass = new Nested();
   it('should notify handlers when nested events are fired', () => {
     expect.hasAssertions();
     const handlerOneArgs: number[] = [];
@@ -124,14 +126,7 @@ describe('DeepNestedEvents with path', () => {
   it('should throw an error when trying to subscribe to an event with an invalid path', () => {
     expect.hasAssertions();
 
-    const InvalidPathClass = AddEvents<
-      typeof DeepNestedEvents,
-      {
-        eventOne: TypedEvent<(value: number) => void>;
-      }
-    >(DeepNestedEvents, 'eventContainer.unknown');
-
-    const instance = new InvalidPathClass();
+    const instance = new InvalidPath();
 
     // Trying to bind an event handler to an invalid path
     expect(() => {
