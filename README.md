@@ -100,7 +100,7 @@ const Nested = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'eventsContainer
 
 // Create an instance and attach event listeners
 const instance = new Nested();
-instance.on('eventOne', () => console.log('Ready event triggered'));
+instance.on('eventOne', () => console.log('Event one triggered'));
 instance.eventsContainer.eventOne.emit();
 ```
 
