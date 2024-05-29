@@ -96,7 +96,10 @@ class _Nested {
 }
 
 // Enhance the class by specifying the path to nested events
-const Nested = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'eventsContainer');
+export const Nested = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'eventsContainer');
+
+// Export it as a type as well, to avoid "'Nested' refers to a value, but is being used as a type".
+export const Nested = _Nested & WithEventsDummyType(NestedEvents);
 
 // Create an instance and attach event listeners
 const instance = new Nested();
@@ -114,14 +117,13 @@ Here’s how errors are managed when an incorrect path is specified:
 
 ```typescript
 try {
-  const InvalidClass = AddEvents<typeof Nested, NestedEvents>(Nested, 'incorrectPath');
+  const InvalidClass = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'incorrectPath');
   const wrongInstance = new InvalidClass();
   wrongInstance.on('eventOne', () => console.log('This will never run'));
 } catch (error) {
   console.error(error);  // Outputs: Error: Event "incorrectPath.eventOne" is not defined
 }
 ```
-
 
 ## FAQ
 ##### _Rather than requiring constraints on the type `U` in AddEvents via documentation, why not express them in the type system?_
