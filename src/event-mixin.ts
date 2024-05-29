@@ -44,7 +44,9 @@ export function AddEvents<TBase extends Constructor, U>(Base: TBase, path?: stri
 
   /**
    * Get the event object from the given instance. If a path is given, the object will be traversed
-   * using the path. If the event object is not found, an error will be thrown.
+   * using the path. If the event object is not found, an error will be thrown. Even though we bypass
+   * type safety in the call (casting instance as any), we've enforced it in the method signature
+   * above, so it's still safe.
    *
    * @param instance - The instance to get the event object from.
    * @param eventName - The name of the event to get.
@@ -70,8 +72,6 @@ export function AddEvents<TBase extends Constructor, U>(Base: TBase, path?: stri
      * @param handler - The handler to invoke when the event is fired.
      */
     on<K extends keyof U, E extends eventHandlerType<U[K]>>(eventName: K, handler: E) {
-      // Even though we bypass type safety in the call (casting this as any), we've enforced it in the
-      // method signature above, so it's still safe.
       getEvent(this, eventName).on(handler);
     }
 
