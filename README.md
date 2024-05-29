@@ -70,6 +70,60 @@ export const Parent = _Parent & WithEventsDummyType(ParentEvents);
 ```
 This type (`Parent`) is what should be exported and used by other code (_not_ `_Parent`).
 
+### Specifying Paths to Nested Event Locations with `AddEvents`
+
+To accommodate complex class structures where events are organized within nested objects, the `AddEvents` utility allows specifying a path to these nested event locations. This feature enhances the ability to manage events in a structured manner within classes.
+
+#### Enhancing Classes with Nested Events
+
+For classes where events are nested within an object, you can specify the path to these nested events when enhancing your class. This approach helps maintain organized and encapsulated event structures.
+
+**Example: Setting Up Nested Events**
+
+Consider a class with events nested under a property called `eventsContainer`:
+
+```typescript
+// Define an interface
+interface NestedEvents {
+  eventOne: TypedEvent<() => void>;
+}
+
+// Define a class with nested events
+class _Nested {
+  eventsContainer = {
+    eventOne: new TypedEvent<() => void>()
+  };
+}
+
+// Enhance the class by specifying the path to nested events
+export const Nested = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'eventsContainer');
+
+// Export it as a type as well, to avoid "'Nested' refers to a value, but is being used as a type".
+export const Nested = _Nested & WithEventsDummyType(NestedEvents);
+
+// Create an instance and attach event listeners
+const instance = new Nested();
+instance.on('eventOne', () => console.log('Event one triggered'));
+instance.eventsContainer.eventOne.emit();
+```
+
+#### Error Handling for Incorrect Paths
+
+If an incorrect path is provided, the utility throws an error. This ensures your event paths are correctly configured and provides immediate feedback for debugging.
+
+**Example: Incorrect Path Configuration**
+
+Here’s how errors are managed when an incorrect path is specified:
+
+```typescript
+try {
+  const InvalidClass = AddEvents<typeof _Nested, NestedEvents>(_Nested, 'incorrectPath');
+  const wrongInstance = new InvalidClass();
+  wrongInstance.on('eventOne', () => console.log('This will never run'));
+} catch (error) {
+  console.error(error);  // Outputs: Error: Event "incorrectPath.eventOne" is not defined
+}
+```
 
 ## FAQ
 ##### _Rather than requiring constraints on the type `U` in AddEvents via documentation, why not express them in the type system?_
