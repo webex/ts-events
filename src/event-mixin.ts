@@ -63,6 +63,18 @@ export function AddEvents<TBase extends Constructor, U>(Base: TBase) {
     off<K extends keyof U, E extends eventHandlerType<U[K]>>(eventName: K, handler: E) {
       (this as any)[eventName].off(handler);
     }
+
+    /**
+     * Remove all event listeners from all events.
+     */
+    removeAllListeners() {
+      Object.keys(this).forEach((eventName) => {
+        const event = (this as any)[eventName];
+        if (event instanceof TypedEvent) {
+          event.removeAllListeners();
+        }
+      });
+    }
   };
 }
 
