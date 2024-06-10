@@ -109,4 +109,17 @@ describe('a child class', () => {
     expect(eventOneArgs).toHaveLength(0); // Should be 0, as all listeners should be removed
     expect(eventThreeArgs).toHaveLength(0); // Should be 0, as all listeners should be removed
   });
+
+  it('should remove all handlers from inherited classes when removeAllListeners is called', () => {
+    expect.hasAssertions();
+
+    const eventTwoArgs: boolean[] = [];
+    myClass.on('eventTwo', (value: boolean) => eventTwoArgs.push(value));
+
+    myClass.removeAllListeners();
+
+    myClass.fireEventTwo();
+
+    expect(eventTwoArgs).toHaveLength(0); // Should be 0, as all listeners should be removed
+  });
 });

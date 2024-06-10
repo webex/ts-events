@@ -68,12 +68,25 @@ export function AddEvents<TBase extends Constructor, U>(Base: TBase) {
      * Remove all event listeners from all events.
      */
     removeAllListeners() {
-      Object.keys(this).forEach((eventName) => {
-        const event = (this as any)[eventName];
-        if (event instanceof TypedEvent) {
-          event.removeAllListeners();
+      /**
+       * Recursively remove all listeners from the given object and its prototype chain. This is
+       * necessary because the events may be defined on the prototype chain.
+       *
+       * @param obj - The object to remove listeners from.
+       */
+      function removeListeners(obj: any) {
+        if (!obj || obj === Object.prototype) {
+          return;
         }
-      });
+        Object.keys(obj).forEach((eventName) => {
+          const event = obj[eventName];
+          if (event instanceof TypedEvent) {
+            event.removeAllListeners();
+          }
+        });
+        removeListeners(Object.getPrototypeOf(obj));
+      }
+      removeListeners(this);
     }
   };
 }
