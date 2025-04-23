@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/webex/ts-events/compare/v1.1.0...v1.2.0) (2025-04-23)
+
+
+### Features
+
+* upgrade to node 22 and yarn 1.22.22 ([#7](https://github.com/webex/ts-events/issues/7)) ([cfbe0e6](https://github.com/webex/ts-events/commit/cfbe0e6578a0b3a1526074f9fde6443f96d36e7f))
+
 # [1.1.0](https://github.com/webex/ts-events/compare/v1.0.1...v1.1.0) (2023-05-04)
 
 
