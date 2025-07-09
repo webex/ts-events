@@ -1,3 +1,11 @@
+## [1.2.1](https://github.com/webex/ts-events/compare/v1.2.0...v1.2.1) (2025-07-09)
+
+
+### Bug Fixes
+
+* engines node ([825298e](https://github.com/webex/ts-events/commit/825298e0e40a54d340ce7509f330f8570155b4f9))
+* engines node ([a993da6](https://github.com/webex/ts-events/commit/a993da6c8be214dc8f62c16b0dae7c6ba093e1dc))
+
 # [1.2.0](https://github.com/webex/ts-events/compare/v1.1.0...v1.2.0) (2025-04-23)
 
 
