@@ -57,4 +57,16 @@ export class TypedEvent<T extends Handler> {
   emit(...args: Parameters<T>): void {
     this.emitter.emit('event', ...args);
   }
+
+  /**
+   * Emit the event and wait for all handlers to complete if they return promises.
+   *
+   * @param args - The arguments to the event.
+   *
+   * @returns A promise that resolves when all handlers have completed.
+   */
+  async emitAsync(...args: Parameters<T>): Promise<void> {
+    const handlers = this.emitter.listeners('event') as T[];
+    await Promise.all(handlers.map((handler) => Promise.resolve(handler(...args))));
+  }
 }
