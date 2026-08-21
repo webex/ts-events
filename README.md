@@ -63,10 +63,10 @@ class _Parent {
 The type that should be exposed can be generated like so:
 ```typescript
 // Create and export the mixin type by adding the event subscription APIs
-export const Parent = AddEvents<typeof _Parent, ParentEvents(_Parent);
+export const Parent = AddEvents<typeof _Parent, ParentEvents>(_Parent);
 
 // Export it as a type as well, to avoid "'Parent' refers to a value, but is being used as a type".
-export const Parent = _Parent & WithEventsDummyType(ParentEvents);
+export type Parent = _Parent & WithEventsDummyType<ParentEvents>;
 ```
 This type (`Parent`) is what should be exported and used by other code (_not_ `_Parent`).
 
@@ -90,4 +90,10 @@ love to improve, so would be happy to learn of a solution here.
 1. Run `yarn` to install dependencies.
 2. Run `yarn prepare` to prepare dependencies.
 3. Run `yarn watch` to build and watch for updates.
-4. Run `yarn test` to build, run tests, lint, and run test coverage.
+4. Run the individual validation commands documented in [AGENTS.md](AGENTS.md).
+
+## Contributing and AI-assisted development
+
+- Read [AGENTS.md](AGENTS.md) for repository setup, verified commands, coding conventions, testing boundaries, and AI-agent guidance.
+- Follow [docs/contributing/GIT_CONVENTIONS.md](docs/contributing/GIT_CONVENTIONS.md) for branch and commit conventions.
+- Start with the [knowledge base](docs/knowledge-base/README.md) for architecture and module ownership.
