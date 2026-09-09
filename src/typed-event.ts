@@ -57,4 +57,11 @@ export class TypedEvent<T extends Handler> {
   emit(...args: Parameters<T>): void {
     this.emitter.emit('event', ...args);
   }
+
+  /**
+   * Remove all listeners from this event.
+   */
+  removeAllListeners(): void {
+    this.emitter.removeAllListeners('event');
+  }
 }
